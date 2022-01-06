@@ -30,6 +30,7 @@ button:{
     justifyContent:'center',
    // backgroundColor:'#00ff00',
     //fontSize:10,
+    margin:10
 },
 text:{
     color:'#000000',
