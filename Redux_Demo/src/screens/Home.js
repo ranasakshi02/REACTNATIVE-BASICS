@@ -4,13 +4,20 @@ import {
     StyleSheet,
     View,
     Text,
+    TouchableOpacity,
     Alert,
     TextInput,
+    FlatList,
 } from 'react-native';
 import CustButton from '../utils/CustomButton';
 import SQLite from 'react-native-sqlite-storage';
 import { useSelector, useDispatch } from 'react-redux';
-import { setName, setAge, increaseAge } from '../redux/actions';
+import { setName, setAge, increaseAge, getCities } from '../redux/actions';
+
+import PushNotification from "react-native-push-notification";
+
+
+import Map from './Map';
 
 const db = SQLite.openDatabase(
     {
@@ -23,7 +30,7 @@ const db = SQLite.openDatabase(
 
 
 export default function Home({ navigation, route }) {
-    const { name, age } = useSelector(state => state.userReducer);
+    const { name, age, cities } = useSelector(state => state.userReducer);
     const dispatch = useDispatch();
 
     // const [name, setName] = useState('');
@@ -31,6 +38,7 @@ export default function Home({ navigation, route }) {
 
     useEffect(() => {
         getData();
+        dispatch(getCities())
     }, []);
 
     const getData = () => {
@@ -62,8 +70,6 @@ export default function Home({ navigation, route }) {
             console.log(error);
         }
     }
-
-
     const updateData = async () => {
         if (name.length == 0) {
             Alert.alert('Warning!', 'Please write your data.')
@@ -107,6 +113,27 @@ export default function Home({ navigation, route }) {
             console.log(error);
         }
     }
+    const handleNotification = (item) => {
+        // PushNotification.cancelAllLocalNotifications();
+
+
+        PushNotification.localNotification({
+            channelId: "test-channel",
+            title: "You Clicked on " + item.country,
+            message: item.city,
+            bigText: item.city + " is one of the largest and most beautiful",
+            color: "red",
+
+        });
+        PushNotification.localNotificationSchedule({
+            channelId: "test-channel",
+            title: "Alarm ",
+            message: "You clicke on " + item.city + " 20 sec ago",
+            date: new Date(Date.now() + 20 * 1000),
+            allowWhileIdle: true,
+
+        })
+    }
 
 
     return (
@@ -115,7 +142,37 @@ export default function Home({ navigation, route }) {
                 styles.text}>
                 Welcome {name} !
             </Text>
-            <Text style={
+
+            <CustButton
+                title='OpenCamera'
+                color='#f40100'
+                onPressButton={()=>{navigation.navigate('Camera')}}
+            />
+            <FlatList
+                data={cities}
+                renderItem={({ item }) => (
+                    <TouchableOpacity
+                        onPress={() =>{
+                            handleNotification(item)
+                            navigation.navigate('Map',{
+                                city:item.city,
+                                lat:item.lat,
+                                lng:item.lng,
+                            });
+                            }}
+                                                
+                        >
+                        <View style={styles.item}>
+                            <Text style={styles.title}>{item.country}</Text>
+                            <Text style={styles.subtitle}>{item.city}</Text>
+                        </View>
+                    </TouchableOpacity>
+
+                )}
+                keyExtractor={(item, index) => index.toString()}
+            />
+
+            {/* <Text style={
                 styles.text}>
                 Your age is {age}
             </Text>
@@ -140,6 +197,11 @@ export default function Home({ navigation, route }) {
                 title='Increase Age'
                 color='#f40100'
                 onPressButton={()=>{dispatch(increaseAge())}}
+            /> */}
+            <CustButton
+                title='Remove'
+                color='#f40100'
+                onPressButton={removeData}
             />
         </View>
     )
@@ -152,7 +214,7 @@ const styles = StyleSheet.create({
     },
     text: {
         fontSize: 30,
-        margin: 10,
+        margin: 5,
     },
     input: {
         width: 300,
@@ -164,5 +226,24 @@ const styles = StyleSheet.create({
         fontSize: 20,
         marginTop: 130,
         marginBottom: 10,
+    },
+    item: {
+        backgroundColor: '#ffffff',
+        borderWidth: 2,
+        borderColor: '#cccccc',
+        borderRadius: 5,
+        margin: 5,
+        width: 350,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    title: {
+        fontSize: 30,
+        margin: 7,
+    },
+    subtitle: {
+        fontSize: 20,
+        margin: 7,
+        color: '#999999',
     }
 })

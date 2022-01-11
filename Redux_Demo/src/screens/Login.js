@@ -10,6 +10,7 @@ import {
 import CustButton from '../utils/CustomButton';
 //import AsyncStorage from '@react-native-async-storage/async-storage';
 import SQLite from 'react-native-sqlite-storage';
+import PushNotification from "react-native-push-notification";
 
 import { useSelector, useDispatch } from 'react-redux';
 import { setName, setAge } from '../redux/actions';
@@ -34,6 +35,8 @@ export default function Login({ navigation }) {
     useEffect(() => {
         createTable();
         getData();
+        createChannels();
+       
     }, []);
 
     const createTable = () => {
@@ -44,6 +47,17 @@ export default function Login({ navigation }) {
                 + "(ID INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT, Age INTEGER);"
             )
         })
+    }
+
+    //notification channel
+
+    const createChannels = () =>{
+        PushNotification.createChannel(
+            {
+                channelId:"test-channel",
+                channelName:"Test Channel"
+            }
+        )
     }
 
     const getData = () => {
@@ -100,11 +114,11 @@ export default function Login({ navigation }) {
     }
     return (
         <View style={styles.body} >
-            <Image
+            {/* <Image
                 style={styles.logo}
                 source={require('../../assets/redux.png')}
                 resizeMode='stretch'
-            />
+            /> */}
             <Text style={styles.text}>
                 Redux
             </Text>

@@ -12,6 +12,8 @@ target 'Redux_Demo' do
     :hermes_enabled => false
   )
 
+  pod 'RNFirebase', :path => '../node_modules/react-native-firebase'
+
   target 'Redux_DemoTests' do
     inherit! :complete
     # Pods for testing
