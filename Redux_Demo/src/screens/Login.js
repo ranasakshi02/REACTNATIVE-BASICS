@@ -114,11 +114,11 @@ export default function Login({ navigation }) {
     }
     return (
         <View style={styles.body} >
-            {/* <Image
+            <Image
                 style={styles.logo}
                 source={require('../../assets/redux.png')}
                 resizeMode='stretch'
-            /> */}
+            /> 
             <Text style={styles.text}>
                 Redux
             </Text>
