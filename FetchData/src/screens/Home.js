@@ -115,18 +115,19 @@ export default function Home({ navigation, route }) {
         <View style={styles.body}>
             <Text style={styles.text}>Welcome,{name} !</Text>
             <Text style={styles.text}>Page:--{apiData.page}  Per_page:--{apiData.per_page} </Text>
-            <Text style={styles.text}>Total:--{apiData.total}  total_pages:--{apiData.total_pages}</Text>
+            <Text style={styles.text}>Total_pages:--{apiData.total_pages}  Total:--{apiData.total} </Text>
             <FlatList
                 data={apiData.data}
                 renderItem={({ item }) => (
                     <View style={styles.item}>
-                        <Text style={styles.title}>{item.id}</Text>
-                        <Text style={styles.subtitle}>{item.email}</Text>
-                        <Text style={styles.subtitle}>{item.first_name}  {item.last_name}</Text>
-                         <Image
+                        <Image
                             style={styles.logo}
-                            source={{uri:item.avatar}}
-                            resizeMode='stretch'/> 
+                            source={{ uri: item.avatar }}
+                            resizeMode='stretch' />
+                        <Text style={styles.subtitle}>{item.first_name}  {item.last_name}</Text>
+                        <Text style={styles.subtitle}>{item.email}</Text>
+
+
                     </View>
                 )}
             />
@@ -163,7 +164,7 @@ const styles = StyleSheet.create({
     text: {
         fontSize: 20,
         margin: 5,
-        color:'#404040'
+        color: '#404040'
     },
     input: {
         width: 300,
@@ -189,7 +190,7 @@ const styles = StyleSheet.create({
     title: {
         fontSize: 22,
         margin: 5,
-        color:'#404040'
+        color: '#404040'
     },
     subtitle: {
         fontSize: 17,
