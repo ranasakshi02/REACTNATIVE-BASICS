@@ -93,10 +93,11 @@ export default function Login({ navigation }) {
         <View style={styles.body} >
             <Image
                 style={styles.logo}
-                source={require('../../assets/sqlite1.png')}
-            />
+                source={require('../../assets/redux.png')}
+                resizeMode='stretch'
+            /> 
             <Text style={styles.text}>
-                SQLite Storage
+                Redux
             </Text>
             <TextInput
                 style={styles.input}
@@ -124,7 +125,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#0080ff',
     },
     logo: {
-        width: 200,
+        width: 100,
         height: 100,
         margin: 20,
     },
