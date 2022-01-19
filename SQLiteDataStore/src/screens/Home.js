@@ -1,14 +1,13 @@
+//import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useState, useEffect } from 'react';
 import {
-    View,
     StyleSheet,
-    Image,
+    View,
     Text,
-    TextInput,
     Alert,
+    TextInput,
 } from 'react-native';
 import CustButton from '../utils/CustomButton';
-//import AsyncStorage from '@react-native-async-storage/async-storage';
 import SQLite from 'react-native-sqlite-storage';
 
 const db = SQLite.openDatabase(
@@ -19,32 +18,24 @@ const db = SQLite.openDatabase(
     () => { },
     error => { console.log(error) }
 );
-export default function Login({ navigation }) {
 
+
+export default function Home({ navigation, route }) {
     const [name, setName] = useState('');
     const [age, setAge] = useState('');
 
     useEffect(() => {
-        createTable();
         getData();
     }, []);
-
-    const createTable = () => {
-        db.transaction((tx) => {
-            tx.executeSql(
-                "CREATE TABLE IF NOT EXISTS "
-                + "Users "
-                + "(ID INTEGER PRIMARY KEY AUTOINCREMENT, Name TEXT, Age INTEGER);"
-            )
-        })
-    }
 
     const getData = () => {
         try {
             // AsyncStorage.getItem('UserData')
             //     .then(value => {
             //         if (value != null) {
-            //             navigation.navigate('Home');
+            //             let user = JSON.parse(value);
+            //             setName(user.Name);
+            //             setAge(user.Age);
             //         }
             //     })
             db.transaction((tx) => {
@@ -54,7 +45,10 @@ export default function Login({ navigation }) {
                     (tx, results) => {
                         var len = results.rows.length;
                         if (len > 0) {
-                            navigation.navigate('Home');
+                            var userName = results.rows.item(0).Name;
+                            var userAge = results.rows.item(0).Age;
+                            setName(userName);
+                            setAge(userAge);
                         }
                     }
                 )
@@ -64,54 +58,77 @@ export default function Login({ navigation }) {
         }
     }
 
-    const setData = async () => {
-        if (name.length == 0 || age.length == 0) {
+
+    const updateData = async () => {
+        if (name.length == 0) {
             Alert.alert('Warning!', 'Please write your data.')
         } else {
             try {
                 // var user = {
-                //     Name: name,
-                //     Age: age
+                //     Name: name
                 // }
-                // await AsyncStorage.setItem('UserData', JSON.stringify(user));
+                // await AsyncStorage.mergeItem('UserData', JSON.stringify(user));
+
                 await db.transaction(async (tx) => {
-                    // await tx.executeSql(
-                    //     "INSERT INTO Users (Name, Age) VALUES ('" + name + "'," + age + ")"
-                    // );
                     await tx.executeSql(
-                        "INSERT INTO Users (Name, Age) VALUES (?,?)",
-                        [name, age]
+                        "UPDATE Users SET Name=?",
+                        [name],
+                        () => {
+                            Alert.alert('Success!', 'Your data has been updated.');
+                        }, error => { console.log(error) }
                     );
+
                 })
-                navigation.navigate('Home');
+
             } catch (error) {
                 console.log(error);
             }
         }
     }
+
+    const removeData = async () => {
+        try {
+            //await AsyncStorage.clear();
+            await db.transaction(async (tx) => {
+                await tx.executeSql(
+                    "DELETE FROM Users",
+                    [],
+                    () => { navigation.navigate('Login'); },
+                    error => { console.log(error) }
+                );
+            })
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+
     return (
-        <View style={styles.body} >
-            <Image
-                style={styles.logo}
-                source={require('../../assets/sqlite1.png')}
-            />
-            <Text style={styles.text}>
-                SQLite Storage
+        <View style={styles.body}>
+            <Text style={
+                styles.text}>
+                Welcome {name} !
+            </Text>
+            <Text style={
+                styles.text}>
+                Your age is {age}
             </Text>
             <TextInput
                 style={styles.input}
                 placeholder='Enter your name'
+                value={name}
                 onChangeText={(value) => setName(value)}
             />
-            <TextInput
-                style={styles.input}
-                placeholder='Enter your age'
-                onChangeText={(value) => setAge(value)}
+            <CustButton
+                title='Update'
+                color='#ff7f00'
+                onPressButton={updateData}
             />
             <CustButton
-                title='Login'
-                color='#1eb900'
-                onPressButton={setData}
+                title='Remove'
+                color='#f40100'
+                onPressButton={removeData}
             />
         </View>
     )
@@ -121,17 +138,10 @@ const styles = StyleSheet.create({
     body: {
         flex: 1,
         alignItems: 'center',
-        backgroundColor: '#0080ff',
-    },
-    logo: {
-        width: 200,
-        height: 100,
-        margin: 20,
     },
     text: {
         fontSize: 30,
-        color: '#ffffff',
-        marginBottom: 50,
+        margin: 10,
     },
     input: {
         width: 300,
@@ -141,6 +151,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#ffffff',
         textAlign: 'center',
         fontSize: 20,
-        marginBottom: 5,
+        marginTop: 130,
+        marginBottom: 10,
     }
 })
