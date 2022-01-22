@@ -44,7 +44,7 @@ export default function SignUp({ navigation }) {
                                 marginTop: 20
                             }]}>First Name</Text>
 
-                            <View style={[styles.action, { marginRight: 10 }]}>
+                            <View style={[styles.action, { marginRight: 20 }]}>
                                 <TextInput
                                     placeholder='Enter First Name'
                                     placeholderTextColor='#999999'
@@ -59,7 +59,7 @@ export default function SignUp({ navigation }) {
                                 marginTop: 20
                             }]}>Last Name</Text>
 
-                            <View style={[styles.action, { marginLeft: 10 }]}>
+                            <View style={[styles.action]}>
                                 <TextInput
                                     placeholder='Enter Last Name'
                                     placeholderTextColor='#999999'
@@ -136,7 +136,7 @@ export default function SignUp({ navigation }) {
                             {
                                 marginTop: 20
                             }]}>Gender</Text>
-                            <View style={[styles.action, { marginRight: 10, marginTop: -12 }]}>
+                            <View style={[styles.action, { marginRight: 20, marginTop: -12 }]}>
                                 <Picker style={styles.drop_down}
                                     selectedValue={selectedCode}
                                     onValueChange={(itemValue) => setselectedCode(itemValue)}
@@ -155,7 +155,7 @@ export default function SignUp({ navigation }) {
                                 marginTop: 20
                             }]}>Date Of Birth</Text>
 
-                            <View style={[styles.action, { marginLeft: 10 }]}>
+                            <View style={[styles.action, {  }]}>
                                 <TextInput
                                     placeholder='dd/mm/yyyy'
                                     placeholderTextColor='#999999'
@@ -307,10 +307,10 @@ const styles = StyleSheet.create({
     textInput: {
         flex: 1,
         marginTop: Platform.OS === 'ios' ? 0 : -15,
-        // paddingLeft: 3,
         color: '#000080',
         fontSize: 15,
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        marginLeft:-4,
     },
     text_forgot: {
         color: '#0000FF',

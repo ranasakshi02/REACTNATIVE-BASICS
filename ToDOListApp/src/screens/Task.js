@@ -17,7 +17,7 @@ export default function Task({ navigation }) {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     
-    
+    const[done,setDone]=useState('')
     const [color, setColor] = useState('white');
     const [bellTime, setBellTime] = useState('1');
     const [showBellModal, setShowBellModal] = useState(false);
